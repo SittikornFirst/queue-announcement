@@ -1,344 +1,608 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- Dynamic Glowing Background Blobs (GPU accelerated CSS animations) -->
+<div class="bg-glow-container">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
 
-<style>
-  :host {
-    --bright-blue: oklch(51.01% 0.274 263.83);
-    --electric-violet: oklch(53.18% 0.28 296.97);
-    --french-violet: oklch(47.66% 0.246 305.88);
-    --vivid-pink: oklch(69.02% 0.277 332.77);
-    --hot-red: oklch(61.42% 0.238 15.34);
-    --orange-red: oklch(63.32% 0.24 31.68);
-
-    --gray-900: oklch(19.37% 0.006 300.98);
-    --gray-700: oklch(36.98% 0.014 302.71);
-    --gray-400: oklch(70.9% 0.015 304.04);
-
-    --red-to-pink-to-purple-vertical-gradient: linear-gradient(
-      180deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
-
-    --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
-      90deg,
-      var(--orange-red) 0%,
-      var(--vivid-pink) 50%,
-      var(--electric-violet) 100%
-    );
-
-    --pill-accent: var(--bright-blue);
-
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    display: block;
-    height: 100dvh;
-  }
-
-  h1 {
-    font-size: 3.125rem;
-    color: var(--gray-900);
-    font-weight: 500;
-    line-height: 100%;
-    letter-spacing: -0.125rem;
-    margin: 0;
-    font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-  }
-
-  p {
-    margin: 0;
-    color: var(--gray-700);
-  }
-
-  main {
-    width: 100%;
-    min-height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    box-sizing: inherit;
-    position: relative;
-  }
-
-  .angular-logo {
-    max-width: 9.2rem;
-  }
-
-  .content {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 3rem;
-  }
-
-  .content h1 {
-    margin-top: 1.75rem;
-  }
-
-  .content p {
-    margin-top: 1.5rem;
-  }
-
-  .divider {
-    width: 1px;
-    background: var(--red-to-pink-to-purple-vertical-gradient);
-    margin-inline: 0.5rem;
-  }
-
-  .pill-group {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-  }
-
-  .pill {
-    display: flex;
-    align-items: center;
-    --pill-accent: var(--bright-blue);
-    background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
-    color: var(--pill-accent);
-    padding-inline: 0.75rem;
-    padding-block: 0.375rem;
-    border-radius: 2.75rem;
-    border: 0;
-    transition: background 0.3s ease;
-    font-family: var(--inter-font);
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.4rem;
-    letter-spacing: -0.00875rem;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .pill:hover {
-    background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
-  }
-
-  .pill-group .pill:nth-child(6n + 1) {
-    --pill-accent: var(--bright-blue);
-  }
-  .pill-group .pill:nth-child(6n + 2) {
-    --pill-accent: var(--electric-violet);
-  }
-  .pill-group .pill:nth-child(6n + 3) {
-    --pill-accent: var(--french-violet);
-  }
-
-  .pill-group .pill:nth-child(6n + 4),
-  .pill-group .pill:nth-child(6n + 5),
-  .pill-group .pill:nth-child(6n + 6) {
-    --pill-accent: var(--hot-red);
-  }
-
-  .pill-group svg {
-    margin-inline-start: 0.25rem;
-  }
-
-  .social-links {
-    display: flex;
-    align-items: center;
-    gap: 0.73rem;
-    margin-top: 1.5rem;
-  }
-
-  .social-links path {
-    transition: fill 0.3s ease;
-    fill: var(--gray-400);
-  }
-
-  .social-links a:hover svg path {
-    fill: var(--gray-900);
-  }
-
-  @media screen and (max-width: 650px) {
-    .content {
-      flex-direction: column;
-      width: max-content;
-    }
-
-    .divider {
-      height: 1px;
-      width: 100%;
-      background: var(--red-to-pink-to-purple-horizontal-gradient);
-      margin-block: 1.5rem;
-    }
-  }
-</style>
-
-<main class="main">
-  <div class="content">
-    <div class="left-side">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 982 239"
-        fill="none"
-        class="angular-logo"
-      >
-        <g clip-path="url(#a)">
-          <path
-            fill="url(#b)"
-            d="M388.676 191.625h30.849L363.31 31.828h-35.758l-56.215 159.797h30.848l13.174-39.356h60.061l13.256 39.356Zm-65.461-62.675 21.602-64.311h1.227l21.602 64.311h-44.431Zm126.831-7.527v70.202h-28.23V71.839h27.002v20.374h1.392c2.782-6.71 7.2-12.028 13.255-15.956 6.056-3.927 13.584-5.89 22.503-5.89 8.264 0 15.465 1.8 21.684 5.318 6.137 3.518 10.964 8.673 14.319 15.382 3.437 6.71 5.074 14.81 4.992 24.383v76.175h-28.23v-71.92c0-8.019-2.046-14.237-6.219-18.819-4.173-4.5-9.819-6.791-17.102-6.791-4.91 0-9.328 1.063-13.174 3.272-3.846 2.128-6.792 5.237-9.001 9.328-2.046 4.009-3.191 8.918-3.191 14.728ZM589.233 239c-10.147 0-18.82-1.391-26.103-4.091-7.282-2.7-13.092-6.382-17.511-10.964-4.418-4.582-7.528-9.655-9.164-15.219l25.448-6.136c1.145 2.372 2.782 4.663 4.991 6.954 2.209 2.291 5.155 4.255 8.837 5.81 3.683 1.554 8.428 2.291 14.074 2.291 8.019 0 14.647-1.964 19.884-5.81 5.237-3.845 7.856-10.227 7.856-19.064v-22.665h-1.391c-1.473 2.946-3.601 5.892-6.383 9.001-2.782 3.109-6.464 5.645-10.965 7.691-4.582 2.046-10.228 3.109-17.101 3.109-9.165 0-17.511-2.209-25.039-6.545-7.446-4.337-13.42-10.883-17.757-19.474-4.418-8.673-6.628-19.473-6.628-32.565 0-13.091 2.21-24.301 6.628-33.383 4.419-9.082 10.311-15.955 17.839-20.7 7.528-4.746 15.874-7.037 25.039-7.037 7.037 0 12.846 1.145 17.347 3.518 4.582 2.373 8.182 5.236 10.883 8.51 2.7 3.272 4.746 6.382 6.137 9.327h1.554v-19.8h27.821v121.749c0 10.228-2.454 18.737-7.364 25.447-4.91 6.709-11.538 11.7-20.048 15.055-8.509 3.355-18.165 4.991-28.884 4.991Zm.245-71.266c5.974 0 11.047-1.473 15.302-4.337 4.173-2.945 7.446-7.118 9.573-12.519 2.21-5.482 3.274-12.027 3.274-19.637 0-7.609-1.064-14.155-3.274-19.8-2.127-5.646-5.318-10.064-9.491-13.255-4.174-3.11-9.329-4.746-15.384-4.746s-11.537 1.636-15.792 4.91c-4.173 3.272-7.365 7.772-9.492 13.418-2.128 5.727-3.191 12.191-3.191 19.392 0 7.2 1.063 13.745 3.273 19.228 2.127 5.482 5.318 9.736 9.573 12.764 4.174 3.027 9.41 4.582 15.629 4.582Zm141.56-26.51V71.839h28.23v119.786h-27.412v-21.273h-1.227c-2.7 6.709-7.119 12.191-13.338 16.446-6.137 4.255-13.747 6.382-22.748 6.382-7.855 0-14.81-1.718-20.783-5.237-5.974-3.518-10.72-8.591-14.075-15.382-3.355-6.709-5.073-14.891-5.073-24.464V71.839h28.312v71.921c0 7.609 2.046 13.664 6.219 18.083 4.173 4.5 9.655 6.709 16.365 6.709 4.173 0 8.183-.982 12.111-3.028 3.927-2.045 7.118-5.072 9.655-9.082 2.537-4.091 3.764-9.164 3.764-15.218Zm65.707-109.395v159.796h-28.23V31.828h28.23Zm44.841 162.169c-7.61 0-14.402-1.391-20.457-4.091-6.055-2.7-10.883-6.791-14.32-12.109-3.518-5.319-5.237-11.946-5.237-19.801 0-6.791 1.228-12.355 3.765-16.773 2.536-4.419 5.891-7.937 10.228-10.637 4.337-2.618 9.164-4.664 14.647-6.055 5.4-1.391 11.046-2.373 16.856-3.027 7.037-.737 12.683-1.391 17.102-1.964 4.337-.573 7.528-1.555 9.574-2.782 1.963-1.309 3.027-3.273 3.027-5.973v-.491c0-5.891-1.718-10.391-5.237-13.664-3.518-3.191-8.51-4.828-15.056-4.828-6.955 0-12.356 1.473-16.447 4.5-4.009 3.028-6.71 6.546-8.183 10.719l-26.348-3.764c2.046-7.282 5.483-13.336 10.31-18.328 4.746-4.909 10.638-8.59 17.511-11.045 6.955-2.455 14.565-3.682 22.912-3.682 5.809 0 11.537.654 17.265 2.045s10.965 3.6 15.711 6.71c4.746 3.109 8.51 7.282 11.455 12.6 2.864 5.318 4.337 11.946 4.337 19.883v80.184h-27.166v-16.446h-.9c-1.719 3.355-4.092 6.464-7.201 9.328-3.109 2.864-6.955 5.237-11.619 6.955-4.828 1.718-10.229 2.536-16.529 2.536Zm7.364-20.701c5.646 0 10.556-1.145 14.729-3.354 4.173-2.291 7.364-5.237 9.655-9.001 2.292-3.763 3.355-7.854 3.355-12.273v-14.155c-.9.737-2.373 1.391-4.5 2.046-2.128.654-4.419 1.145-7.037 1.636-2.619.491-5.155.9-7.692 1.227-2.537.328-4.746.655-6.628.901-4.173.572-8.019 1.472-11.292 2.781-3.355 1.31-5.973 3.11-7.855 5.401-1.964 2.291-2.864 5.318-2.864 8.918 0 5.237 1.882 9.164 5.728 11.782 3.682 2.782 8.51 4.091 14.401 4.091Zm64.643 18.328V71.839h27.412v19.965h1.227c2.21-6.955 5.974-12.274 11.292-16.038 5.319-3.763 11.456-5.645 18.329-5.645 1.555 0 3.355.082 5.237.163 1.964.164 3.601.328 4.91.573v25.938c-1.227-.41-3.109-.819-5.646-1.146a58.814 58.814 0 0 0-7.446-.49c-5.155 0-9.738 1.145-13.829 3.354-4.091 2.209-7.282 5.236-9.655 9.164-2.373 3.927-3.519 8.427-3.519 13.5v70.448h-28.312ZM222.077 39.192l-8.019 125.923L137.387 0l84.69 39.192Zm-53.105 162.825-57.933 33.056-57.934-33.056 11.783-28.556h92.301l11.783 28.556ZM111.039 62.675l30.357 73.803H80.681l30.358-73.803ZM7.937 165.115 0 39.192 84.69 0 7.937 165.115Z"
-          />
-          <path
-            fill="url(#c)"
-            d="M388.676 191.625h30.849L363.31 31.828h-35.758l-56.215 159.797h30.848l13.174-39.356h60.061l13.256 39.356Zm-65.461-62.675 21.602-64.311h1.227l21.602 64.311h-44.431Zm126.831-7.527v70.202h-28.23V71.839h27.002v20.374h1.392c2.782-6.71 7.2-12.028 13.255-15.956 6.056-3.927 13.584-5.89 22.503-5.89 8.264 0 15.465 1.8 21.684 5.318 6.137 3.518 10.964 8.673 14.319 15.382 3.437 6.71 5.074 14.81 4.992 24.383v76.175h-28.23v-71.92c0-8.019-2.046-14.237-6.219-18.819-4.173-4.5-9.819-6.791-17.102-6.791-4.91 0-9.328 1.063-13.174 3.272-3.846 2.128-6.792 5.237-9.001 9.328-2.046 4.009-3.191 8.918-3.191 14.728ZM589.233 239c-10.147 0-18.82-1.391-26.103-4.091-7.282-2.7-13.092-6.382-17.511-10.964-4.418-4.582-7.528-9.655-9.164-15.219l25.448-6.136c1.145 2.372 2.782 4.663 4.991 6.954 2.209 2.291 5.155 4.255 8.837 5.81 3.683 1.554 8.428 2.291 14.074 2.291 8.019 0 14.647-1.964 19.884-5.81 5.237-3.845 7.856-10.227 7.856-19.064v-22.665h-1.391c-1.473 2.946-3.601 5.892-6.383 9.001-2.782 3.109-6.464 5.645-10.965 7.691-4.582 2.046-10.228 3.109-17.101 3.109-9.165 0-17.511-2.209-25.039-6.545-7.446-4.337-13.42-10.883-17.757-19.474-4.418-8.673-6.628-19.473-6.628-32.565 0-13.091 2.21-24.301 6.628-33.383 4.419-9.082 10.311-15.955 17.839-20.7 7.528-4.746 15.874-7.037 25.039-7.037 7.037 0 12.846 1.145 17.347 3.518 4.582 2.373 8.182 5.236 10.883 8.51 2.7 3.272 4.746 6.382 6.137 9.327h1.554v-19.8h27.821v121.749c0 10.228-2.454 18.737-7.364 25.447-4.91 6.709-11.538 11.7-20.048 15.055-8.509 3.355-18.165 4.991-28.884 4.991Zm.245-71.266c5.974 0 11.047-1.473 15.302-4.337 4.173-2.945 7.446-7.118 9.573-12.519 2.21-5.482 3.274-12.027 3.274-19.637 0-7.609-1.064-14.155-3.274-19.8-2.127-5.646-5.318-10.064-9.491-13.255-4.174-3.11-9.329-4.746-15.384-4.746s-11.537 1.636-15.792 4.91c-4.173 3.272-7.365 7.772-9.492 13.418-2.128 5.727-3.191 12.191-3.191 19.392 0 7.2 1.063 13.745 3.273 19.228 2.127 5.482 5.318 9.736 9.573 12.764 4.174 3.027 9.41 4.582 15.629 4.582Zm141.56-26.51V71.839h28.23v119.786h-27.412v-21.273h-1.227c-2.7 6.709-7.119 12.191-13.338 16.446-6.137 4.255-13.747 6.382-22.748 6.382-7.855 0-14.81-1.718-20.783-5.237-5.974-3.518-10.72-8.591-14.075-15.382-3.355-6.709-5.073-14.891-5.073-24.464V71.839h28.312v71.921c0 7.609 2.046 13.664 6.219 18.083 4.173 4.5 9.655 6.709 16.365 6.709 4.173 0 8.183-.982 12.111-3.028 3.927-2.045 7.118-5.072 9.655-9.082 2.537-4.091 3.764-9.164 3.764-15.218Zm65.707-109.395v159.796h-28.23V31.828h28.23Zm44.841 162.169c-7.61 0-14.402-1.391-20.457-4.091-6.055-2.7-10.883-6.791-14.32-12.109-3.518-5.319-5.237-11.946-5.237-19.801 0-6.791 1.228-12.355 3.765-16.773 2.536-4.419 5.891-7.937 10.228-10.637 4.337-2.618 9.164-4.664 14.647-6.055 5.4-1.391 11.046-2.373 16.856-3.027 7.037-.737 12.683-1.391 17.102-1.964 4.337-.573 7.528-1.555 9.574-2.782 1.963-1.309 3.027-3.273 3.027-5.973v-.491c0-5.891-1.718-10.391-5.237-13.664-3.518-3.191-8.51-4.828-15.056-4.828-6.955 0-12.356 1.473-16.447 4.5-4.009 3.028-6.71 6.546-8.183 10.719l-26.348-3.764c2.046-7.282 5.483-13.336 10.31-18.328 4.746-4.909 10.638-8.59 17.511-11.045 6.955-2.455 14.565-3.682 22.912-3.682 5.809 0 11.537.654 17.265 2.045s10.965 3.6 15.711 6.71c4.746 3.109 8.51 7.282 11.455 12.6 2.864 5.318 4.337 11.946 4.337 19.883v80.184h-27.166v-16.446h-.9c-1.719 3.355-4.092 6.464-7.201 9.328-3.109 2.864-6.955 5.237-11.619 6.955-4.828 1.718-10.229 2.536-16.529 2.536Zm7.364-20.701c5.646 0 10.556-1.145 14.729-3.354 4.173-2.291 7.364-5.237 9.655-9.001 2.292-3.763 3.355-7.854 3.355-12.273v-14.155c-.9.737-2.373 1.391-4.5 2.046-2.128.654-4.419 1.145-7.037 1.636-2.619.491-5.155.9-7.692 1.227-2.537.328-4.746.655-6.628.901-4.173.572-8.019 1.472-11.292 2.781-3.355 1.31-5.973 3.11-7.855 5.401-1.964 2.291-2.864 5.318-2.864 8.918 0 5.237 1.882 9.164 5.728 11.782 3.682 2.782 8.51 4.091 14.401 4.091Zm64.643 18.328V71.839h27.412v19.965h1.227c2.21-6.955 5.974-12.274 11.292-16.038 5.319-3.763 11.456-5.645 18.329-5.645 1.555 0 3.355.082 5.237.163 1.964.164 3.601.328 4.91.573v25.938c-1.227-.41-3.109-.819-5.646-1.146a58.814 58.814 0 0 0-7.446-.49c-5.155 0-9.738 1.145-13.829 3.354-4.091 2.209-7.282 5.236-9.655 9.164-2.373 3.927-3.519 8.427-3.519 13.5v70.448h-28.312ZM222.077 39.192l-8.019 125.923L137.387 0l84.69 39.192Zm-53.105 162.825-57.933 33.056-57.934-33.056 11.783-28.556h92.301l11.783 28.556ZM111.039 62.675l30.357 73.803H80.681l30.358-73.803ZM7.937 165.115 0 39.192 84.69 0 7.937 165.115Z"
-          />
-        </g>
-        <defs>
-          <radialGradient
-            id="c"
-            cx="0"
-            cy="0"
-            r="1"
-            gradientTransform="rotate(118.122 171.182 60.81) scale(205.794)"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stop-color="#FF41F8" />
-            <stop offset=".707" stop-color="#FF41F8" stop-opacity=".5" />
-            <stop offset="1" stop-color="#FF41F8" stop-opacity="0" />
-          </radialGradient>
-          <linearGradient
-            id="b"
-            x1="0"
-            x2="982"
-            y1="192"
-            y2="192"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stop-color="#F0060B" />
-            <stop offset="0" stop-color="#F0070C" />
-            <stop offset=".526" stop-color="#CC26D5" />
-            <stop offset="1" stop-color="#7702FF" />
-          </linearGradient>
-          <clipPath id="a"><path fill="#fff" d="M0 0h982v239H0z" /></clipPath>
-        </defs>
-      </svg>
-      <h1>Hello, {{ title() }}</h1>
-      <p>Congratulations! Your app is running. 🎉</p>
-    </div>
-    <div class="divider" role="separator" aria-label="Divider"></div>
-    <div class="right-side">
-      <div class="pill-group">
-        @for (item of [
-          { title: 'Explore the Docs', link: 'https://angular.dev' },
-          { title: 'Learn with Tutorials', link: 'https://angular.dev/tutorials' },
-          { title: 'Prompt and best practices for AI', link: 'https://angular.dev/ai/develop-with-ai'},
-          { title: 'CLI Docs', link: 'https://angular.dev/tools/cli' },
-          { title: 'Angular Language Service', link: 'https://angular.dev/tools/language-service' },
-          { title: 'Angular DevTools', link: 'https://angular.dev/tools/devtools' },
-        ]; track item.title) {
-          <a
-            class="pill"
-            [href]="item.link"
-            target="_blank"
-            rel="noopener"
-          >
-            <span>{{ item.title }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="14"
-              viewBox="0 -960 960 960"
-              width="14"
-              fill="currentColor"
-            >
-              <path
-                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"
-              />
-            </svg>
-          </a>
-        }
+<!-- ==================== SPLASH / GESTURE INITIALIZATION OVERLAY ==================== -->
+@if (!isInitialized()) {
+  <div class="splash-overlay fade-in">
+    <div class="glass-card splash-card">
+      <div class="splash-logo">
+        <div class="logo-pulse"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="logo-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+        </svg>
       </div>
-      <div class="social-links">
-        <a
-          href="https://github.com/angular/angular"
-          aria-label="Github"
-          target="_blank"
-          rel="noopener"
-        >
-          <svg
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            alt="Github"
-          >
-            <path
-              d="M12.3047 0C5.50634 0 0 5.50942 0 12.3047C0 17.7423 3.52529 22.3535 8.41332 23.9787C9.02856 24.0946 9.25414 23.7142 9.25414 23.3871C9.25414 23.0949 9.24389 22.3207 9.23876 21.2953C5.81601 22.0377 5.09414 19.6444 5.09414 19.6444C4.53427 18.2243 3.72524 17.8449 3.72524 17.8449C2.61064 17.082 3.81137 17.0973 3.81137 17.0973C5.04697 17.1835 5.69604 18.3647 5.69604 18.3647C6.79321 20.2463 8.57636 19.7029 9.27978 19.3881C9.39052 18.5924 9.70736 18.0499 10.0591 17.7423C7.32641 17.4347 4.45429 16.3765 4.45429 11.6618C4.45429 10.3185 4.9311 9.22133 5.72065 8.36C5.58222 8.04931 5.16694 6.79833 5.82831 5.10337C5.82831 5.10337 6.85883 4.77319 9.2121 6.36459C10.1965 6.09082 11.2424 5.95546 12.2883 5.94931C13.3342 5.95546 14.3801 6.09082 15.3644 6.36459C17.7023 4.77319 18.7328 5.10337 18.7328 5.10337C19.3942 6.79833 18.9789 8.04931 18.8559 8.36C19.6403 9.22133 20.1171 10.3185 20.1171 11.6618C20.1171 16.3888 17.2409 17.4296 14.5031 17.7321C14.9338 18.1012 15.3337 18.8559 15.3337 20.0084C15.3337 21.6552 15.3183 22.978 15.3183 23.3779C15.3183 23.7009 15.5336 24.0854 16.1642 23.9623C21.0871 22.3484 24.6094 17.7341 24.6094 12.3047C24.6094 5.50942 19.0999 0 12.3047 0Z"
-            />
-          </svg>
-        </a>
-        <a
-          href="https://x.com/angular"
-          aria-label="X"
-          target="_blank"
-          rel="noopener"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            alt="X"
-          >
-            <path
-              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-            />
-          </svg>
-        </a>
-        <a
-          href="https://www.youtube.com/channel/UCbn1OgGei-DV7aSRo_HaAiw"
-          aria-label="Youtube"
-          target="_blank"
-          rel="noopener"
-        >
-          <svg
-            width="29"
-            height="20"
-            viewBox="0 0 29 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            alt="Youtube"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M27.4896 1.52422C27.9301 1.96749 28.2463 2.51866 28.4068 3.12258C29.0004 5.35161 29.0004 10 29.0004 10C29.0004 10 29.0004 14.6484 28.4068 16.8774C28.2463 17.4813 27.9301 18.0325 27.4896 18.4758C27.0492 18.9191 26.5 19.2389 25.8972 19.4032C23.6778 20 14.8068 20 14.8068 20C14.8068 20 5.93586 20 3.71651 19.4032C3.11363 19.2389 2.56449 18.9191 2.12405 18.4758C1.68361 18.0325 1.36732 17.4813 1.20683 16.8774C0.613281 14.6484 0.613281 10 0.613281 10C0.613281 10 0.613281 5.35161 1.20683 3.12258C1.36732 2.51866 1.68361 1.96749 2.12405 1.52422C2.56449 1.08095 3.11363 0.76113 3.71651 0.596774C5.93586 0 14.8068 0 14.8068 0C14.8068 0 23.6778 0 25.8972 0.596774C26.5 0.76113 27.0492 1.08095 27.4896 1.52422ZM19.3229 10L11.9036 5.77905V14.221L19.3229 10Z"
-            />
-          </svg>
-        </a>
+      <h1>AURA QUEUE</h1>
+      <p class="splash-subtitle">Intelligent Queue Announcement System</p>
+      
+      <div class="alert-info-box">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="alert-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 1 1 1.056 1.056L12 12.75l-.041.02a.75.75 0 1 1-1.056-1.056L12 11.25ZM12 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <span>iOS Safari Compatibility Mode Active: Tap below to unlock high-fidelity voice engine and initialize speaker.</span>
+      </div>
+
+      <button (click)="startSystem()" class="btn-start-system" id="btn-initialize">
+        <span>INITIALIZE & START</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+        </svg>
+      </button>
+      
+      <div class="system-footer">
+        <span>AuraQueue v22.0 • Target: ES2021 • Compatibility Engine Enabled</span>
       </div>
     </div>
   </div>
-</main>
+}
 
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- ==================== MAIN APPLICATION SYSTEM ==================== -->
+@if (isInitialized()) {
+  
+  <!-- ==================== DEVICE MODE: WIRELESS CONTROLLER (PHONE) ==================== -->
+  @if (deviceMode() === 'controller') {
+    <div class="main-app-container remote-controller-view fade-in">
+      
+      <!-- Remote Header -->
+      <header class="app-header glass-card remote-header">
+        <div class="header-logo-group">
+          <span class="logo-text">AURA REMOTE</span>
+          
+          @if (peerConnectionState() === 'connected') {
+            <div class="badge-status badge-speaking">
+              <span class="pulse-indicator"></span>
+              <span>CONNECTED</span>
+            </div>
+          } @else if (peerConnectionState() === 'connecting') {
+            <div class="badge-status badge-simulator">
+              <span class="simulator-dot"></span>
+              <span>CONNECTING...</span>
+            </div>
+          } @else {
+            <div class="badge-status">
+              <span class="pulse-indicator"></span>
+              <span>DISCONNECTED</span>
+            </div>
+          }
+        </div>
+        
+        <button (click)="exitPeerMode()" class="btn-icon-only text-danger" title="Disconnect and exit remote mode">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </header>
 
+      <!-- Connection Error Banner -->
+      @if (peerConnectionState() === 'error') {
+        <div class="alert-info-box bg-danger-alert fade-in">
+          <span>⚠️ {{ peerErrorMessage() || 'Connection failed. Verify Room ID.' }}</span>
+        </div>
+      }
 
-<router-outlet />
+      @if (peerConnectionState() === 'connected') {
+        
+        <!-- REMOTE COMMANDS WORKSPACE -->
+        <main class="remote-workspace">
+          
+          <!-- Current Serviced Indicator -->
+          <div class="glass-card remote-status-card">
+            <span>LAST COMMAND SENT</span>
+            <div class="remote-big-display">
+              <span class="rem-num">{{ formattedNumber() }}</span>
+              <span class="rem-counter">{{ currentCounter() }}</span>
+            </div>
+          </div>
+
+          <!-- PRIMARY GIANT THUMB TRIGGER -->
+          <button (click)="nextQueue()" class="btn-giant-trigger" id="btn-remote-next">
+            <span>NEXT QUEUE</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="icon-lg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+
+          <!-- SECONDARY TOUCH ACTIONS -->
+          <div class="remote-action-row">
+            <button (click)="prevQueue()" class="btn-control btn-control-secondary remote-sub-btn" id="btn-remote-prev">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+              <span>PREV</span>
+            </button>
+            
+            <button (click)="recall()" class="btn-control btn-control-warning remote-sub-btn" id="btn-remote-recall">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+              </svg>
+              <span>RECALL</span>
+            </button>
+          </div>
+
+          <!-- REMOTE CALL DIRECT -->
+          <div class="glass-card ctrl-card remote-card-pad">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-cyan">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 9.152c.582.448 1.148.89 1.676 1.345m-1.676-1.345c-.528-.407-1.045-.815-1.545-1.226m3.22 2.571c.516.438.986.88 1.405 1.328a1.2 1.2 0 0 1 0 1.664c-.38.4-.906.666-1.464.743m1.464-3.735c-.563-.482-1.082-.962-1.546-1.428a1.2 1.2 0 0 0-1.696 0c-.393.395-.658.943-.733 1.523m3.975 1.64c-.464-.464-.984-.984-1.465-1.464m-4.475 2.12c-.528-.528-1.056-1.056-1.584-1.584m0 0a2.25 2.25 0 0 0-3.182 0l-2.25 2.25a2.25 2.25 0 0 0 0 3.182l5.25 5.25a2.25 2.25 0 0 0 3.182 0l2.25-2.25a2.25 2.25 0 0 0 0-3.182L15.042 9.152Z" />
+              </svg>
+              <h3>CALL CUSTOM</h3>
+            </div>
+
+            <div class="ctrl-group">
+              <div class="number-input-spinner remote-spinner">
+                <button (click)="decrementInput()" class="btn-spinner-minus">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                  </svg>
+                </button>
+                <input type="text" pattern="[0-9]*" maxlength="3" placeholder="0" [(ngModel)]="inputNumber" class="spinner-input-field" />
+                <button (click)="incrementInput()" class="btn-spinner-plus">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7-7H5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="ctrl-group">
+              <div class="counter-chip-grid">
+                @for (c of availableCounters(); track c) {
+                  <button (click)="selectedCounter.set(c)" [class.active-chip]="selectedCounter() === c" class="counter-selector-chip">
+                    {{ c }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <button (click)="callCustomNumber()" class="btn-action-primary">
+              <span>CALL SPECIFIC NUMBER</span>
+            </button>
+          </div>
+
+          <!-- DANGER SYSTEM RESET -->
+          <button (click)="resetSystem()" class="btn-reset-remote">
+            RESET COUNTER TO 0
+          </button>
+        </main>
+      } @else {
+        
+        <!-- REMOTE CONNECTING SCREEN -->
+        <div class="glass-card remote-connecting-card fade-in">
+          <span class="loader-pulse"></span>
+          <h3>Connecting to iPad Display Board...</h3>
+          <p>Targeting Room Code: <strong class="text-cyan">{{ roomIdInput() }}</strong></p>
+          <p class="sub-alert">Ensure the iPad is in Host mode and showing the same room code.</p>
+          
+          <button (click)="exitPeerMode()" class="btn-action-primary text-danger-btn border-danger-btn">
+            CANCEL CONNECTION
+          </button>
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- ==================== STANDALONE / HOST DISPLAY LAYOUT ==================== -->
+  @if (deviceMode() !== 'controller') {
+    <div class="main-app-container fade-in">
+      
+      <!-- Top Sleek Header Bar -->
+      <header class="app-header glass-card">
+        <div class="header-logo-group">
+          <span class="logo-text">AURA QUEUE</span>
+          
+          @if (deviceMode() === 'host') {
+            @if (peerConnectionState() === 'connected') {
+              <div class="badge-status badge-speaking">
+                <span class="pulse-indicator"></span>
+                <span>SYNC HOST ACTIVE • CLIENT LINKED</span>
+              </div>
+            } @else {
+              <div class="badge-status badge-simulator">
+                <span class="simulator-dot"></span>
+                <span>WAITING FOR REMOTE...</span>
+              </div>
+            }
+          } @else {
+            <div class="badge-status" [class.badge-speaking]="isSpeaking()">
+              <span class="pulse-indicator"></span>
+              <span>{{ isSpeaking() ? 'ANNOUNCING...' : 'STANDBY' }}</span>
+            </div>
+          }
+        </div>
+        
+        <div class="header-actions">
+          @if (isAutoAdvancing()) {
+            <div class="badge-simulator">
+              <span class="simulator-dot"></span>
+              <span>AUTO SIMULATOR ACTIVE</span>
+            </div>
+          }
+          <button (click)="resetSystem()" class="btn-icon-only text-danger" title="Reset queue system" id="btn-reset-sys">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="app-grid-layout">
+        
+        <!-- LEFT SECTION: DISPLAY BOARD & MAIN QUICK ADMIN CONTROLS -->
+        <main class="left-panel-flow">
+          
+          <!-- GIANT GLOWING DISPLAY BOARD -->
+          <section class="glass-card board-card" [class.board-host-style]="deviceMode() === 'host'">
+            
+            <!-- Host status overlay banner -->
+            @if (deviceMode() === 'host') {
+              <div class="host-badge-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm text-cyan">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096M9 21h3m-3.078-5.097a9.003 9.003 0 1 1 12.156 0M8.25 9.75h4.875c.621 0 1.125.504 1.125 1.125v3.026a2.999 2.999 0 0 1-5.117 2.12l-.307-.307m-3.385-5.964L5.25 9.75m0 0a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
+                </svg>
+                <span>WIRELESS DISPLAY HOST ACTIVE • ROOM CODE: <strong class="text-cyan text-underline">{{ peerRoomId() }}</strong></span>
+              </div>
+            }
+
+            <div class="board-header">
+              <span>NOW SERVING</span>
+              <div class="serving-indicator-dots" [class.animating]="isSpeaking()">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            
+            <div class="board-number-display" [class.voice-pulse]="isSpeaking()">
+              <!-- Dynamic boxed spacious digits based on length (stripping leading zeros) -->
+              @for (char of formattedNumber().split(''); track $index) {
+                <div class="digit-segment">{{ char }}</div>
+              }
+            </div>
+
+            <div class="board-counter-display">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="counter-svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+              </svg>
+              <span class="counter-name-text">{{ currentCounter() }}</span>
+            </div>
+
+            <!-- Speakers soundwave visualizer (pure CSS dynamic animations) -->
+            <div class="soundwave-container" [class.visible]="isSpeaking()">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+              <div class="bar bar-3"></div>
+              <div class="bar bar-4"></div>
+              <div class="bar bar-5"></div>
+              <div class="bar bar-6"></div>
+              <div class="bar bar-7"></div>
+            </div>
+          </section>
+
+          <!-- IPAD INCOMING QR CODE PAIRING BOX -->
+          @if (deviceMode() === 'host' && peerConnectionState() === 'disconnected') {
+            <section class="glass-card host-pairing-box fade-in">
+              <div class="pairing-info">
+                <h3>Pair Handheld Phone Controller</h3>
+                <p>Scan this QR code with your phone camera or enter Room Code <strong class="text-cyan">{{ peerRoomId() }}</strong> inside your phone's AuraQueue app to connect instantly.</p>
+                <div class="join-link-box">
+                  <span class="join-link-lbl">DIRECT LINK:</span>
+                  <span class="join-link-txt">{{ getJoinUrl() }}</span>
+                </div>
+              </div>
+              <div class="pairing-qr">
+                <img [src]="getQrCodeUrl()" alt="Scan to connect controller" class="qr-img" />
+              </div>
+            </section>
+          }
+
+          <!-- ADMIN EASY QUICK TOUCH CONTROLS -->
+          <section class="admin-quick-controls">
+            <button (click)="prevQueue()" class="btn-control btn-control-secondary" id="btn-prev">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+              <span>PREV</span>
+            </button>
+            
+            <button (click)="recall()" class="btn-control btn-control-warning" [class.glow-pulse]="!isSpeaking()" id="btn-recall">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+              </svg>
+              <span>RECALL</span>
+            </button>
+            
+            <button (click)="nextQueue()" class="btn-control btn-control-primary" id="btn-next">
+              <span>NEXT QUEUE</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </section>
+
+          <!-- HISTORY TIMELINE LIST -->
+          <section class="glass-card history-card">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-primary">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              <h3>RECENTLY CALLED QUEUES</h3>
+            </div>
+
+            <div class="history-grid">
+              @if (history().length === 0) {
+                <div class="empty-state">
+                  <span>No queue history yet. Advance to call numbers.</span>
+                </div>
+              } @else {
+                @for (item of history(); track item.timestamp) {
+                  <div (click)="callHistoryItem(item)" class="history-item-row" title="Click to recall this queue" id="history-{{item.queueNumber}}">
+                    <div class="hist-num">{{ item.queueNumber }}</div>
+                    <div class="hist-details">
+                      <span class="hist-counter">{{ item.counter }}</span>
+                      <span class="hist-time">{{ item.timestamp }}</span>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="hist-recall-svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                    </svg>
+                  </div>
+                }
+              }
+            </div>
+          </section>
+        </main>
+
+        <!-- RIGHT SECTION: DETAILED ADMIN CONTROLS AND CUSTOMIZERS -->
+        <aside class="right-panel-controls">
+
+          <!-- CARD: WIRELESS MULTI-DEVICE SYNC MANAGER (NEW!) -->
+          <section class="glass-card ctrl-card">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-cyan">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l6-6m0 0l6 6m-6-6v12m0 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+              <h3>WIRELESS CONTROLLER SYNC</h3>
+            </div>
+
+            @if (deviceMode() === 'standalone') {
+              <div class="sync-desc">
+                <p>Run your iPad as a standalone board, or link a handheld phone as a wireless controller.</p>
+              </div>
+              <div class="sync-btn-stack">
+                <button (click)="enableHostMode()" class="btn-action-primary text-cyan-btn border-cyan-btn">
+                  <span>Host Display Board (iPad)</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096M9 21h3m-3.078-5.097a9.003 9.003 0 1 1 12.156 0M8.25 9.75h4.875c.621 0 1.125.504 1.125 1.125v3.026a2.999 2.999 0 0 1-5.117 2.12l-.307-.307m-3.385-5.964L5.25 9.75m0 0a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
+                  </svg>
+                </button>
+                
+                <div class="sync-divider">
+                  <span>OR JOIN HOST BY ROOM ID</span>
+                </div>
+
+                <div class="join-control-box">
+                  <input type="text" placeholder="Enter Room Code (e.g. ABCDE)" [(ngModel)]="roomIdInput" class="voice-dropdown-select code-entry-input" />
+                  <button (click)="connectToDisplayBoard()" class="btn-action-primary">
+                    <span>Connect Remote</span>
+                  </button>
+                </div>
+              </div>
+            }
+
+            @if (deviceMode() === 'host') {
+              <div class="sync-active-info">
+                <div class="sync-row">
+                  <span class="sync-lbl">Device Role:</span>
+                  <span class="sync-val text-cyan">Display Board Host (iPad)</span>
+                </div>
+                <div class="sync-row">
+                  <span class="sync-lbl">Room Code:</span>
+                  <span class="sync-val font-code text-cyan font-bold">{{ peerRoomId() }}</span>
+                </div>
+                <div class="sync-row">
+                  <span class="sync-lbl">Sync State:</span>
+                  <span class="sync-val" [class.text-emerald]="peerConnectionState() === 'connected'">
+                    {{ peerConnectionState() === 'connected' ? 'Connected to Phone' : 'Waiting for Remote Phone...' }}
+                  </span>
+                </div>
+                @if (peerConnectionState() === 'connected') {
+                  <div class="sync-row">
+                    <span class="sync-lbl">Linked Device:</span>
+                    <span class="sync-val text-light font-bold">{{ connectedDeviceName() }}</span>
+                  </div>
+                }
+                
+                <button (click)="exitPeerMode()" class="btn-action-primary text-danger-btn border-danger-btn sync-stop-btn">
+                  STOP WIRELESS HOST
+                </button>
+              </div>
+            }
+          </section>
+          
+          <!-- CARD: MANUAL CALL DIRECT -->
+          <section class="glass-card ctrl-card">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-cyan">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 9.152c.582.448 1.148.89 1.676 1.345m-1.676-1.345c-.528-.407-1.045-.815-1.545-1.226m3.22 2.571c.516.438.986.88 1.405 1.328a1.2 1.2 0 0 1 0 1.664c-.38.4-.906.666-1.464.743m1.464-3.735c-.563-.482-1.082-.962-1.546-1.428a1.2 1.2 0 0 0-1.696 0c-.393.395-.658.943-.733 1.523m3.975 1.64c-.464-.464-.984-.984-1.465-1.464m-4.475 2.12c-.528-.528-1.056-1.056-1.584-1.584m0 0a2.25 2.25 0 0 0-3.182 0l-2.25 2.25a2.25 2.25 0 0 0 0 3.182l5.25 5.25a2.25 2.25 0 0 0 3.182 0l2.25-2.25a2.25 2.25 0 0 0 0-3.182L15.042 9.152Z" />
+              </svg>
+              <h3>CALL CUSTOM QUEUE</h3>
+            </div>
+
+            <div class="ctrl-group">
+              <label class="form-label">QUEUE NUMBER (0-999)</label>
+              <div class="number-input-spinner">
+                <button (click)="decrementInput()" class="btn-spinner-minus" id="btn-spin-minus">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                  </svg>
+                </button>
+                
+                <input type="text" 
+                       pattern="[0-9]*" 
+                       maxlength="3" 
+                       placeholder="0" 
+                       [(ngModel)]="inputNumber" 
+                       class="spinner-input-field" 
+                       id="input-queue-num" />
+                       
+                <button (click)="incrementInput()" class="btn-spinner-plus" id="btn-spin-plus">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-sm">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7-7H5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="ctrl-group">
+              <label class="form-label">SELECT DESTINATION COUNTER</label>
+              <div class="counter-chip-grid">
+                @for (c of availableCounters(); track c) {
+                  <button (click)="selectedCounter.set(c)" 
+                          [class.active-chip]="selectedCounter() === c" 
+                          class="counter-selector-chip"
+                          id="chip-{{c.replace(' ', '')}}">
+                    {{ c }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <button (click)="callCustomNumber()" class="btn-action-primary" id="btn-call-custom">
+              <span>CALL ACTIVE NUMBER</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+              </svg>
+            </button>
+          </section>
+
+          <!-- CARD: AUDIO AND TEXT TO SPEECH ENGINE CUSTOMIZER -->
+          <section class="glass-card ctrl-card">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-emerald">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+              </svg>
+              <h3>VOICE SYSTEM SETTINGS</h3>
+            </div>
+
+            <!-- Voice Synthesizer Selector -->
+            <div class="ctrl-group">
+              <label class="form-label">SELECTED VOICE ENGINE</label>
+              @if (voices().length === 0) {
+                <div class="voice-fallback-alert">
+                  <span>Loading system voices...</span>
+                </div>
+              } @else {
+                <select [ngModel]="ttsSettings().voiceURI" (ngModelChange)="updateVoice($event)" class="voice-dropdown-select" id="select-voice">
+                  @for (v of voices(); track v.voiceURI) {
+                    <option [value]="v.voiceURI">
+                      {{ v.name }} ({{ v.lang }}) {{ v.localService ? '• Offline' : '' }}
+                    </option>
+                  }
+                </select>
+              }
+            </div>
+
+            <!-- Sound Parameters Sliders -->
+            <div class="ctrl-group">
+              <div class="slider-header">
+                <span class="slider-title">SPEED (RATE)</span>
+                <span class="slider-value">{{ ttsSettings().rate }}x</span>
+              </div>
+              <input type="range" 
+                     min="0.5" 
+                     max="1.8" 
+                     step="0.1" 
+                     [value]="ttsSettings().rate" 
+                     (input)="updateSpeechRate($event)" 
+                     class="slider-range-input" 
+                     id="slider-rate" />
+              
+              <div class="speed-presets-wrapper">
+                @for (preset of speedPresets; track preset.value) {
+                  <button (click)="announcementService.updateSettings({ rate: preset.value })" 
+                          [class.active-preset]="ttsSettings().rate === preset.value"
+                          class="preset-btn"
+                          id="preset-{{preset.value.toString().replace('.', '')}}">
+                    {{ preset.label.split(' ')[0] }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="ctrl-group">
+              <div class="slider-header">
+                <span class="slider-title">PITCH</span>
+                <span class="slider-value">{{ ttsSettings().pitch }}</span>
+              </div>
+              <input type="range" 
+                     min="0.5" 
+                     max="1.5" 
+                     step="0.1" 
+                     [value]="ttsSettings().pitch" 
+                     (input)="updateSpeechPitch($event)" 
+                     class="slider-range-input" 
+                     id="slider-pitch" />
+            </div>
+
+            <div class="ctrl-group">
+              <div class="slider-header">
+                <span class="slider-title">VOLUME</span>
+                <span class="slider-value">{{ Math.round(ttsSettings().volume * 100) }}%</span>
+              </div>
+              <input type="range" 
+                     min="0.0" 
+                     max="1.0" 
+                     step="0.05" 
+                     [value]="ttsSettings().volume" 
+                     (input)="updateSpeechVolume($event)" 
+                     class="slider-range-input" 
+                     id="slider-volume" />
+            </div>
+          </section>
+
+          <!-- CARD: AUTOMATED SIMULATOR -->
+          <section class="glass-card ctrl-card">
+            <div class="card-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-md text-amber">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.656 48.656 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7C4.547 9.547 4.5 10.768 4.5 12s.047 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7C19.453 14.453 19.5 13.232 19.5 12Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+              <h3>AUTO ADVANCE SIMULATOR</h3>
+            </div>
+
+            <div class="ctrl-group">
+              <label class="form-label">ADVANCE INTERVAL (SECONDS)</label>
+              <select [(ngModel)]="autoAdvanceInterval" 
+                      [disabled]="isAutoAdvancing()" 
+                      class="voice-dropdown-select" 
+                      id="select-interval">
+                <option [value]="5">Every 5 Seconds (Fast)</option>
+                <option [value]="8">Every 8 Seconds (Recommended)</option>
+                <option [value]="12">Every 12 Seconds</option>
+                <option [value]="15">Every 15 Seconds</option>
+              </select>
+            </div>
+
+            <button (click)="toggleSimulator()" 
+                    [class.active-simulator-btn]="isAutoAdvancing()" 
+                    class="btn-action-primary"
+                    id="btn-toggle-sim">
+              <span>{{ isAutoAdvancing() ? 'STOP AUTO SIMULATION' : 'START AUTO SIMULATION' }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="icon-sm">
+                @if (isAutoAdvancing()) {
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" />
+                } @else {
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                }
+              </svg>
+            </button>
+          </section>
+
+        </aside>
+
+      </div>
+
+    </div>
+  }
+}
