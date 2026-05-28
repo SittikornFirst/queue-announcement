@@ -2,7 +2,8 @@ import { Component, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { QueueService, HistoryItem } from './services/queue.service';
-import { AnnouncementService, SpeechSettings } from './services/announcement.service';
+import { AudioService } from './services/audio.service';
+import { AudioDeviceService, AudioDevice } from './services/audio-device.service';
 import { PeerService } from './services/peer.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class App {
 
   // Inject services
   readonly queueService = inject(QueueService);
-  readonly announcementService = inject(AnnouncementService);
+  readonly audioService = inject(AudioService);
+  readonly audioDeviceService = inject(AudioDeviceService);
   readonly peerService = inject(PeerService);
 
   // Local Form state
@@ -29,6 +31,9 @@ export class App {
   readonly deviceMode = signal<'standalone' | 'host' | 'controller'>('standalone');
   readonly roomIdInput = signal<string>('');
 
+  // Audio device selection UI state
+  readonly showDeviceSelector = signal<boolean>(false);
+
   readonly speedPresets = [
     { label: 'Slow (0.8x)', value: 0.8 },
     { label: 'Normal (1.0x)', value: 1.0 },
@@ -37,16 +42,19 @@ export class App {
   ];
 
   // Helper getters from services to keep template clean
-  readonly isInitialized = computed(() => this.announcementService.isInitialized());
-  readonly isSpeaking = computed(() => this.announcementService.isSpeaking());
+  readonly isInitialized = computed(() => this.audioService.isInitialized());
+  readonly isPlaying = computed(() => this.audioService.isPlaying());
   readonly formattedNumber = computed(() => this.queueService.formattedNumber());
   readonly currentNumber = computed(() => this.queueService.currentNumber());
   readonly currentCounter = computed(() => this.queueService.currentCounter());
   readonly history = computed(() => this.queueService.history());
   readonly availableCounters = computed(() => this.queueService.availableCounters());
-  readonly voices = computed(() => this.announcementService.voices());
-  readonly ttsSettings = computed(() => this.announcementService.settings());
+  readonly voices = computed(() => this.audioService.voices());
+  readonly audioSettings = computed(() => this.audioService.settings());
   readonly isAutoAdvancing = computed(() => this.queueService.isAutoAdvancing());
+  readonly audioDevices = computed(() => this.audioDeviceService.audioDevices());
+  readonly selectedAudioDevice = computed(() => this.audioDeviceService.selectedOutputDevice());
+  readonly bluetoothSpeaker = computed(() => this.audioDeviceService.getBluetoothSpeaker());
 
   // WebRTC Sync Getters
   readonly peerRoomId = computed(() => this.peerService.roomId());
@@ -86,16 +94,16 @@ export class App {
    * Action: Start session by capturing required browser user gesture
    */
   startSystem() {
-    const success = this.announcementService.initSpeech();
+    const success = this.audioService.initAudio();
     if (success) {
       setTimeout(() => {
-        const isThai = this.ttsSettings().lang.startsWith('th');
+        const isThai = this.audioSettings().lang.startsWith('th');
         const welcomeText = isThai ? 'ระบบคิวพร้อมใช้งานค่ะ' : 'Queue system is ready.';
         const utterance = new SpeechSynthesisUtterance(welcomeText);
         utterance.volume = 0.8;
         utterance.rate = 1.0;
         
-        const voice = this.voices().find(v => v.voiceURI === this.ttsSettings().voiceURI);
+        const voice = this.voices().find(v => v.voiceURI === this.audioSettings().voiceURI);
         if (voice) utterance.voice = voice;
         
         window.speechSynthesis.speak(utterance);
@@ -232,33 +240,52 @@ export class App {
    */
   updateSpeechVolume(e: Event) {
     const val = parseFloat((e.target as HTMLInputElement).value);
-    this.announcementService.updateSettings({ volume: val });
+    this.audioService.updateSettings({ volume: val });
   }
 
   updateSpeechRate(e: Event) {
     const val = parseFloat((e.target as HTMLInputElement).value);
-    this.announcementService.updateSettings({ rate: val });
+    this.audioService.updateSettings({ rate: val });
   }
 
   updateSpeechPitch(e: Event) {
     const val = parseFloat((e.target as HTMLInputElement).value);
-    this.announcementService.updateSettings({ pitch: val });
+    this.audioService.updateSettings({ pitch: val });
   }
 
   updateVoice(voiceURI: string) {
     const voice = this.voices().find(v => v.voiceURI === voiceURI);
     if (voice) {
-      this.announcementService.updateSettings({
+      this.audioService.updateSettings({
         voiceURI: voiceURI,
         lang: voice.lang.startsWith('th') ? 'th-TH' : 'en-US' as any
       });
       const testUtterance = new SpeechSynthesisUtterance(voice.lang.startsWith('th') ? 'ทดสอบเสียง' : 'Test voice');
       testUtterance.voice = voice;
-      testUtterance.rate = this.ttsSettings().rate;
-      testUtterance.pitch = this.ttsSettings().pitch;
+      testUtterance.rate = this.audioSettings().rate;
+      testUtterance.pitch = this.audioSettings().pitch;
       testUtterance.volume = 0.5;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(testUtterance);
+    }
+  }
+
+  /**
+   * Set audio output device
+   */
+  async selectAudioDevice(deviceId: string) {
+    await this.audioService.setAudioDevice(deviceId);
+    this.showDeviceSelector.set(false);
+  }
+
+  /**
+   * Connect to Bluetooth speaker if available
+   */
+  async connectBluetoothSpeaker() {
+    const btSpeaker = this.bluetoothSpeaker();
+    if (btSpeaker) {
+      await this.selectAudioDevice(btSpeaker.deviceId);
+      console.log('Connected to Bluetooth speaker:', btSpeaker.label);
     }
   }
 
