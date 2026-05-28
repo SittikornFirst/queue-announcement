@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { AudioDeviceService } from './audio-device.service';
 
 export interface AudioSettings {
   volume: number;      // 0 to 1
@@ -17,6 +18,8 @@ export class AudioService {
   private mediaElementAudioSource: MediaElementAudioSourceNode | null = null;
   private audioElement: HTMLAudioElement | null = null;
   private gainNode: GainNode | null = null;
+
+  private audioDeviceService = inject(AudioDeviceService);
 
   // Available voices list
   readonly voices = signal<SpeechSynthesisVoice[]>([]);
@@ -74,6 +77,13 @@ export class AudioService {
           // Connect audio element to audio context
           this.mediaElementAudioSource = this.audioContext.createMediaElementAudioSource(this.audioElement);
           this.mediaElementAudioSource.connect(this.gainNode);
+
+          // Try to connect to Bluetooth speaker
+          this.audioDeviceService.connectToBluetoothSpeaker(this.audioElement).then(connected => {
+            if (connected) {
+              console.log('Connected to Bluetooth speaker for audio output');
+            }
+          });
         }
       }
 
@@ -199,6 +209,29 @@ export class AudioService {
     } else {
       this.synth.speak(utterance);
     }
+  }
+
+  /**
+   * Get available audio output devices
+   */
+  getAudioDevices() {
+    return this.audioDeviceService.audioDevices;
+  }
+
+  /**
+   * Set audio output device
+   */
+  async setAudioDevice(deviceId: string): Promise<void> {
+    if (this.audioElement) {
+      await this.audioDeviceService.setSinkId(this.audioElement, deviceId);
+    }
+  }
+
+  /**
+   * Get Bluetooth speaker if available
+   */
+  getBluetoothSpeaker() {
+    return this.audioDeviceService.getBluetoothSpeaker();
   }
 
   cancelAnnouncements() {
