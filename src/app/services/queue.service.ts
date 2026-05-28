@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
-import { AnnouncementService } from './announcement.service';
+import { AudioService } from './audio.service';
 
 export interface HistoryItem {
   queueNumber: string;
@@ -35,7 +35,7 @@ export class QueueService {
   readonly isAutoAdvancing = signal<boolean>(false);
   private autoAdvanceTimer: any = null;
 
-  constructor(private announcementService: AnnouncementService) {}
+  constructor(private audioService: AudioService) {}
 
   /**
    * Utility helper to pad numbers to 3 digits (e.g., 5 -> "005", 999 -> "999")
@@ -106,14 +106,14 @@ export class QueueService {
     this.stopAutoAdvance();
     this.currentNumber.set(0);
     this.history.set([]);
-    this.announcementService.cancelAnnouncements();
+    this.audioService.cancelAnnouncements();
   }
 
   /**
    * Trigger actual Text-to-Speech
    */
   private announceCurrent() {
-    this.announcementService.announce(this.formattedNumber(), this.currentCounter());
+    this.audioService.announce(this.formattedNumber(), this.currentCounter());
   }
 
   /**
