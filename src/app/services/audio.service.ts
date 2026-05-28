@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 export interface AudioSettings {
   volume: number;      // 0 to 1
@@ -6,7 +6,6 @@ export interface AudioSettings {
   pitch: number;       // 0.5 to 2.0
   voiceURI: string;    // Selected voice URI
   lang: 'th-TH' | 'en-US';
-  useAudioContext: boolean; // Use Web Audio API for better Bluetooth support
 }
 
 @Injectable({
@@ -15,7 +14,8 @@ export interface AudioSettings {
 export class AudioService {
   private readonly synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
   private audioContext: AudioContext | null = null;
-  private currentAudioSource: AudioBufferSourceNode | null = null;
+  private mediaElementAudioSource: MediaElementAudioSourceNode | null = null;
+  private audioElement: HTMLAudioElement | null = null;
   private gainNode: GainNode | null = null;
 
   // Available voices list
@@ -33,8 +33,7 @@ export class AudioService {
     rate: 1.0,
     pitch: 1.0,
     voiceURI: '',
-    lang: 'th-TH',
-    useAudioContext: true
+    lang: 'th-TH'
   });
 
   // Track stuck recovery timeout
@@ -48,21 +47,39 @@ export class AudioService {
   }
 
   /**
-   * Initialize Web Audio API context (required for Bluetooth speaker routing)
-   * MUST be called inside a user gesture
+   * Initialize Web Audio API context with proper Bluetooth routing
+   * MUST be called inside a user gesture (click/tap)
    */
   initAudio(): boolean {
     try {
-      if (this.settings().useAudioContext && !this.audioContext) {
+      if (!this.audioContext) {
         const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
-        this.audioContext = new AudioContextClass();
+        this.audioContext = new AudioContextClass({
+          latency: 'interactive',
+          sampleRate: 44100
+        });
 
         // Create gain node for volume control
-        if (this.audioContext) {
-          this.gainNode = this.audioContext.createGain();
-          this.gainNode.connect(this.audioContext.destination);
-          this.gainNode.gain.value = this.settings().volume;
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.connect(this.audioContext.destination);
+        this.gainNode.gain.value = this.settings().volume;
+
+        // Create or reuse hidden audio element for Bluetooth routing
+        if (!this.audioElement) {
+          this.audioElement = new Audio();
+          this.audioElement.style.display = 'none';
+          this.audioElement.crossOrigin = 'anonymous';
+          document.body.appendChild(this.audioElement);
+
+          // Connect audio element to audio context
+          this.mediaElementAudioSource = this.audioContext.createMediaElementAudioSource(this.audioElement);
+          this.mediaElementAudioSource.connect(this.gainNode);
         }
+      }
+
+      // Resume audio context if suspended
+      if (this.audioContext && this.audioContext.state === 'suspended') {
+        this.audioContext.resume().catch(e => console.warn('Audio context resume failed:', e));
       }
 
       // Also initialize speech synthesis
@@ -93,9 +110,11 @@ export class AudioService {
   /**
    * Resume audio context if suspended (iOS Safari requirement)
    */
-  resumeAudioContext(): void {
+  private resumeAudioContext(): void {
     if (this.audioContext && this.audioContext.state === 'suspended') {
-      this.audioContext.resume().catch((e) => console.error('Failed to resume audio context:', e));
+      this.audioContext.resume().catch((e) => {
+        console.warn('Failed to resume audio context:', e);
+      });
     }
   }
 
@@ -123,23 +142,20 @@ export class AudioService {
     this.settings.set(updated);
 
     // Update gain node volume immediately
-    if (this.gainNode) {
-      this.gainNode.gain.value = updated.volume;
+    if (this.gainNode && this.audioContext) {
+      this.gainNode.gain.setValueAtTime(updated.volume, this.audioContext.currentTime);
     }
   }
 
   /**
-   * Robust queue announcement with Bluetooth speaker support
-   * Uses Web Speech API but with proper audio context setup
+   * Announce using Web Speech API with Audio Context routing
+   * This ensures audio goes through the system's selected audio output (including Bluetooth)
    */
   announce(queueNumber: string, counterName: string) {
     if (!this.synth) return;
 
-    // Resume audio context if suspended (iOS)
     this.resumeAudioContext();
-
     const text = this.formatAnnouncementText(queueNumber, counterName);
-
     this.cancelAnnouncements();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -173,61 +189,15 @@ export class AudioService {
       this.isPlaying.set(false);
     };
 
-    this.synth.speak(utterance);
-  }
-
-  /**
-   * Play audio from synthesized speech using Web Audio API
-   * This can provide better Bluetooth speaker routing on some devices
-   */
-  async announceWithAudioAPI(queueNumber: string, counterName: string) {
-    if (!this.synth || !this.audioContext) {
-      console.warn('Audio API not initialized. Falling back to Web Speech API.');
-      this.announce(queueNumber, counterName);
-      return;
-    }
-
-    try {
-      this.resumeAudioContext();
-      this.cancelAnnouncements();
-
-      const text = this.formatAnnouncementText(queueNumber, counterName);
-      const utterance = new SpeechSynthesisUtterance(text);
-      const currentSettings = this.settings();
-
-      utterance.volume = 1; // Volume controlled by gainNode
-      utterance.rate = currentSettings.rate;
-      utterance.pitch = currentSettings.pitch;
-
-      const voice = this.voices().find((v) => v.voiceURI === currentSettings.voiceURI);
-      if (voice) {
-        utterance.voice = voice;
-        utterance.lang = voice.lang;
-      }
-
-      // Update gain node
-      if (this.gainNode && this.audioContext) {
-        this.gainNode.gain.setValueAtTime(currentSettings.volume, this.audioContext.currentTime);
-      }
-
-      this.isPlaying.set(true);
-      this.startSafetyTimeout();
-
-      utterance.onend = () => {
-        this.clearSafetyTimeout();
-        this.isPlaying.set(false);
-      };
-
-      utterance.onerror = (event) => {
-        console.warn('Speech error:', event);
-        this.clearSafetyTimeout();
-        this.isPlaying.set(false);
-      };
-
+    // Force Bluetooth output by resuming audio context
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then(() => {
+        this.synth?.speak(utterance);
+      }).catch(() => {
+        this.synth?.speak(utterance);
+      });
+    } else {
       this.synth.speak(utterance);
-    } catch (e) {
-      console.error('Audio API announcement failed:', e);
-      this.announce(queueNumber, counterName);
     }
   }
 
@@ -235,14 +205,9 @@ export class AudioService {
     if (!this.synth) return;
     this.synth.cancel();
 
-    // Stop any audio source
-    if (this.currentAudioSource) {
-      try {
-        this.currentAudioSource.stop();
-      } catch (e) {
-        // Already stopped
-      }
-      this.currentAudioSource = null;
+    if (this.audioElement) {
+      this.audioElement.pause();
+      this.audioElement.currentTime = 0;
     }
 
     this.clearSafetyTimeout();
@@ -292,6 +257,19 @@ export class AudioService {
     if (this.stuckTimeout) {
       clearTimeout(this.stuckTimeout);
       this.stuckTimeout = null;
+    }
+  }
+
+  /**
+   * Cleanup when app is destroyed
+   */
+  destroy() {
+    this.cancelAnnouncements();
+    if (this.audioElement && this.audioElement.parentNode) {
+      this.audioElement.parentNode.removeChild(this.audioElement);
+    }
+    if (this.audioContext) {
+      this.audioContext.close().catch(() => {});
     }
   }
 }
