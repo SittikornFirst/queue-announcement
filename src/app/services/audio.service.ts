@@ -58,9 +58,11 @@ export class AudioService {
         this.audioContext = new AudioContextClass();
 
         // Create gain node for volume control
-        this.gainNode = this.audioContext.createGain();
-        this.gainNode.connect(this.audioContext.destination);
-        this.gainNode.gain.value = this.settings().volume;
+        if (this.audioContext) {
+          this.gainNode = this.audioContext.createGain();
+          this.gainNode.connect(this.audioContext.destination);
+          this.gainNode.gain.value = this.settings().volume;
+        }
       }
 
       // Also initialize speech synthesis
@@ -204,7 +206,7 @@ export class AudioService {
       }
 
       // Update gain node
-      if (this.gainNode) {
+      if (this.gainNode && this.audioContext) {
         this.gainNode.gain.setValueAtTime(currentSettings.volume, this.audioContext.currentTime);
       }
 
