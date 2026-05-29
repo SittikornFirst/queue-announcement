@@ -27,8 +27,8 @@ export class QueueService {
 
   // List of active counters available
   readonly availableCounters = signal<string[]>([
-    'Counter 1',
-    'PICK UP',
+    'Mango station',
+    'Drink station',
   ]);
 
   // Auto advance simulator active state
