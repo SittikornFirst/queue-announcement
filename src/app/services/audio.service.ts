@@ -63,27 +63,29 @@ export class AudioService {
         });
 
         // Create gain node for volume control
-        this.gainNode = this.audioContext.createGain();
-        this.gainNode.connect(this.audioContext.destination);
-        this.gainNode.gain.value = this.settings().volume;
+        if (this.audioContext) {
+          this.gainNode = this.audioContext.createGain();
+          this.gainNode.connect(this.audioContext.destination);
+          this.gainNode.gain.value = this.settings().volume;
 
-        // Create or reuse hidden audio element for Bluetooth routing
-        if (!this.audioElement) {
-          this.audioElement = new Audio();
-          this.audioElement.style.display = 'none';
-          this.audioElement.crossOrigin = 'anonymous';
-          document.body.appendChild(this.audioElement);
+          // Create or reuse hidden audio element for Bluetooth routing
+          if (!this.audioElement) {
+            this.audioElement = new Audio();
+            this.audioElement.style.display = 'none';
+            this.audioElement.crossOrigin = 'anonymous';
+            document.body.appendChild(this.audioElement);
 
-          // Connect audio element to audio context
-          this.mediaElementAudioSource = this.audioContext.createMediaElementAudioSource(this.audioElement);
-          this.mediaElementAudioSource.connect(this.gainNode);
+            // Connect audio element to audio context
+            this.mediaElementAudioSource = this.audioContext.createMediaElementSource(this.audioElement);
+            this.mediaElementAudioSource.connect(this.gainNode);
 
-          // Try to connect to Bluetooth speaker
-          this.audioDeviceService.connectToBluetoothSpeaker(this.audioElement).then(connected => {
-            if (connected) {
-              console.log('Connected to Bluetooth speaker for audio output');
-            }
-          });
+            // Try to connect to Bluetooth speaker
+            this.audioDeviceService.connectToBluetoothSpeaker(this.audioElement).then(connected => {
+              if (connected) {
+                console.log('Connected to Bluetooth speaker for audio output');
+              }
+            });
+          }
         }
       }
 
