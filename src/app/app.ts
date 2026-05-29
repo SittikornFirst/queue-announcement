@@ -22,6 +22,9 @@ export class App {
   readonly audioDeviceService = inject(AudioDeviceService);
   readonly peerService = inject(PeerService);
 
+  // Make audioService public for template access (some templates reference it directly)
+  public readonly announcementService = this.audioService;
+
   // Local Form state
   readonly inputNumber = signal<string>('');
   readonly selectedCounter = signal<string>('Counter 1');
@@ -43,14 +46,14 @@ export class App {
 
   // Helper getters from services to keep template clean
   readonly isInitialized = computed(() => this.audioService.isInitialized());
-  readonly isPlaying = computed(() => this.audioService.isPlaying());
+  readonly isSpeaking = computed(() => this.audioService.isPlaying());
   readonly formattedNumber = computed(() => this.queueService.formattedNumber());
   readonly currentNumber = computed(() => this.queueService.currentNumber());
   readonly currentCounter = computed(() => this.queueService.currentCounter());
   readonly history = computed(() => this.queueService.history());
   readonly availableCounters = computed(() => this.queueService.availableCounters());
   readonly voices = computed(() => this.audioService.voices());
-  readonly audioSettings = computed(() => this.audioService.settings());
+  readonly ttsSettings = computed(() => this.audioService.settings());
   readonly isAutoAdvancing = computed(() => this.queueService.isAutoAdvancing());
   readonly audioDevices = computed(() => this.audioDeviceService.audioDevices());
   readonly selectedAudioDevice = computed(() => this.audioDeviceService.selectedOutputDevice());
@@ -97,13 +100,13 @@ export class App {
     const success = this.audioService.initAudio();
     if (success) {
       setTimeout(() => {
-        const isThai = this.audioSettings().lang.startsWith('th');
+        const isThai = this.ttsSettings().lang.startsWith('th');
         const welcomeText = isThai ? 'ระบบคิวพร้อมใช้งานค่ะ' : 'Queue system is ready.';
         const utterance = new SpeechSynthesisUtterance(welcomeText);
         utterance.volume = 0.8;
         utterance.rate = 1.0;
         
-        const voice = this.voices().find(v => v.voiceURI === this.audioSettings().voiceURI);
+        const voice = this.voices().find(v => v.voiceURI === this.ttsSettings().voiceURI);
         if (voice) utterance.voice = voice;
         
         window.speechSynthesis.speak(utterance);
@@ -262,8 +265,8 @@ export class App {
       });
       const testUtterance = new SpeechSynthesisUtterance(voice.lang.startsWith('th') ? 'ทดสอบเสียง' : 'Test voice');
       testUtterance.voice = voice;
-      testUtterance.rate = this.audioSettings().rate;
-      testUtterance.pitch = this.audioSettings().pitch;
+      testUtterance.rate = this.ttsSettings().rate;
+      testUtterance.pitch = this.ttsSettings().pitch;
       testUtterance.volume = 0.5;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(testUtterance);
